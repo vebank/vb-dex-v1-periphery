@@ -5,7 +5,7 @@ import './ext-lib/TransferHelper.sol';
 
 import './libraries/VeBankV1Library.sol';
 import './interfaces/IVeBankV1Router01.sol';
-import './interfaces/IERC20.sol';
+import './interfaces/IVIP180.sol';
 import './interfaces/IVVET.sol';
 
 contract VeBankV1Router01 is IVeBankV1Router01 {

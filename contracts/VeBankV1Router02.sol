@@ -6,7 +6,7 @@ import './ext-lib/TransferHelper.sol';
 import './interfaces/IVeBankV1Router02.sol';
 import './libraries/VeBankV1Library.sol';
 import './libraries/SafeMath.sol';
-import './interfaces/IERC20.sol';
+import './interfaces/IVIP180.sol';
 import './interfaces/IVVET.sol';
 
 contract VeBankV1Router02 is IVeBankV1Router02 {
@@ -186,7 +186,7 @@ contract VeBankV1Router02 is IVeBankV1Router02 {
             address(this),
             deadline
         );
-        TransferHelper.safeTransfer(token, to, IERC20(token).balanceOf(address(this)));
+        TransferHelper.safeTransfer(token, to, IVIP180(token).balanceOf(address(this)));
         IVVET(VVET).withdraw(amountVET);
         TransferHelper.safeTransferVET(to, amountVET);
     }
@@ -328,7 +328,7 @@ contract VeBankV1Router02 is IVeBankV1Router02 {
             { // scope to avoid stack too deep errors
             (uint reserve0, uint reserve1,) = pair.getReserves();
             (uint reserveInput, uint reserveOutput) = input == token0 ? (reserve0, reserve1) : (reserve1, reserve0);
-            amountInput = IERC20(input).balanceOf(address(pair)).sub(reserveInput);
+            amountInput = IVIP180(input).balanceOf(address(pair)).sub(reserveInput);
             amountOutput = VeBankV1Library.getAmountOut(amountInput, reserveInput, reserveOutput);
             }
             (uint amount0Out, uint amount1Out) = input == token0 ? (uint(0), amountOutput) : (amountOutput, uint(0));
@@ -346,10 +346,10 @@ contract VeBankV1Router02 is IVeBankV1Router02 {
         TransferHelper.safeTransferFrom(
             path[0], msg.sender, VeBankV1Library.pairFor(factory, path[0], path[1]), amountIn
         );
-        uint balanceBefore = IERC20(path[path.length - 1]).balanceOf(to);
+        uint balanceBefore = IVIP180(path[path.length - 1]).balanceOf(to);
         _swapSupportingFeeOnTransferTokens(path, to);
         require(
-            IERC20(path[path.length - 1]).balanceOf(to).sub(balanceBefore) >= amountOutMin,
+            IVIP180(path[path.length - 1]).balanceOf(to).sub(balanceBefore) >= amountOutMin,
             'VeBankV1Router: INSUFFICIENT_OUTPUT_AMOUNT'
         );
     }
@@ -369,10 +369,10 @@ contract VeBankV1Router02 is IVeBankV1Router02 {
         uint amountIn = msg.value;
         IVVET(VVET).deposit{value: amountIn}();
         assert(IVVET(VVET).transfer(VeBankV1Library.pairFor(factory, path[0], path[1]), amountIn));
-        uint balanceBefore = IERC20(path[path.length - 1]).balanceOf(to);
+        uint balanceBefore = IVIP180(path[path.length - 1]).balanceOf(to);
         _swapSupportingFeeOnTransferTokens(path, to);
         require(
-            IERC20(path[path.length - 1]).balanceOf(to).sub(balanceBefore) >= amountOutMin,
+            IVIP180(path[path.length - 1]).balanceOf(to).sub(balanceBefore) >= amountOutMin,
             'VeBankV1Router: INSUFFICIENT_OUTPUT_AMOUNT'
         );
     }
@@ -393,7 +393,7 @@ contract VeBankV1Router02 is IVeBankV1Router02 {
             path[0], msg.sender, VeBankV1Library.pairFor(factory, path[0], path[1]), amountIn
         );
         _swapSupportingFeeOnTransferTokens(path, address(this));
-        uint amountOut = IERC20(VVET).balanceOf(address(this));
+        uint amountOut = IVIP180(VVET).balanceOf(address(this));
         require(amountOut >= amountOutMin, 'VeBankV1Router: INSUFFICIENT_OUTPUT_AMOUNT');
         IVVET(VVET).withdraw(amountOut);
         TransferHelper.safeTransferVET(to, amountOut);

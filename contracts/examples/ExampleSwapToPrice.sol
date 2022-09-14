@@ -5,7 +5,7 @@ import '../ext-lib/Babylonian.sol';
 import '../ext-lib/TransferHelper.sol';
 
 import '../libraries/VeBankV1LiquidityMathLibrary.sol';
-import '../interfaces/IERC20.sol';
+import '../interfaces/IVIP180.sol';
 import '../interfaces/IVeBankV1Router01.sol';
 import '../libraries/SafeMath.sol';
 import '../libraries/VeBankV1Library.sol';
